@@ -1,5 +1,5 @@
 ## Getting and Cleaning Data Project
-# load data
+# load data and package
 if(!file.info('UCI HAR Dataset')$isdir){
   temp <- tempfile()
   url <- "http://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
@@ -28,8 +28,8 @@ x <- rbind(x_train,x_test)
 y <- rbind(y_train,y_test)
 subject <- rbind(subject_train,subject_test)
 dt <- cbind(x, subject, y)
-colnames(dt) <- as.vector(features$V2), 'Subject', 'Activity')
-head(dt,3)
+colnames(dt) <- c(as.vector(features$V2), 'Subject', 'Activity')
+str(dt)
 
 #2.Extracts only the measurements on the mean and standard deviation for each measurement. 
 selected <- grep("mean\\(\\)|std\\(\\)",features$V2,value=TRUE)
@@ -53,7 +53,6 @@ names(dt)<-gsub("Mag", "Magnitude", names(dt))
 names(dt)<-gsub("BodyBody", "Body", names(dt))
 
 #5.From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
-str(dt)
 dt <- aggregate(.~Subject+Activity_Name,dt,mean)
 head(dt)
 if(file.exists('tidydt.txt')){
